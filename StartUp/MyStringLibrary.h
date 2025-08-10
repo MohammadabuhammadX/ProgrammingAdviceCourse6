@@ -3,7 +3,7 @@
 #include <string>
 using namespace std;
 
-namespace StringLibrary {
+namespace MyStringLibrary {
 
     string ReadText()
     {

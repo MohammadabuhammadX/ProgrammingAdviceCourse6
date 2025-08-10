@@ -3,7 +3,7 @@
 #include <string>
 using namespace std;
 
-namespace PatternLibrary {
+namespace MyPatternLibrary {
 
     void PrintMultiplicationTable() {
         cout << "\n\t\t\t Multiplication Table From 1 to 10\n";

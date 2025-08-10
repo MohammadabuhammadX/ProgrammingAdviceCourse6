@@ -2,7 +2,7 @@
 #include <iostream>
 using namespace std;
 
-namespace StatisticsLibrary {
+namespace MyStatisticsLibrary {
 
     int FindMax(int arr[100], int arrLength) {
         int maxOf = arr[0];

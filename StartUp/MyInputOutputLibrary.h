@@ -4,10 +4,14 @@
 #include <limits>
 using namespace std;
 
-namespace InputOutputLibrary {
+namespace MyInputOutputLibrary {
 
     void PrintMessage(string message) {
         cout << message << endl;
+    }
+    string PrintMessageAndReturn(string message) {
+        cout << message << endl;
+        return message;
     }
 
     int ReadPositiveNumber(string message) {
@@ -17,6 +21,24 @@ namespace InputOutputLibrary {
         {
             cin >> num;
         } while (num < 0);
+        return num;
+    }
+
+    int ReadNumber(string message) {
+
+        int num;
+        cout << message << endl;
+        cin >> num;
+
+        while(cin.fail()){
+
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            cout << "Invalid Number, Enter a valid One" << endl;
+
+            cin >> num;
+        }
         return num;
     }
 

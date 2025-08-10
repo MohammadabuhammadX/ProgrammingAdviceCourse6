@@ -4,7 +4,7 @@
 #include <ctime>
 using namespace std;
 
-namespace RandomLibrary {
+namespace MyRandomLibrary {
 
     int RandomNumber(int From, int To) {
         return rand() % (To - From + 1) + From;

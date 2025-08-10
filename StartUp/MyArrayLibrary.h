@@ -3,7 +3,7 @@
 #include <string>
 using namespace std;
 
-namespace ArrayLibrary {
+namespace MyArrayLibrary {
 
     const int MAX_SIZE = 100;
 

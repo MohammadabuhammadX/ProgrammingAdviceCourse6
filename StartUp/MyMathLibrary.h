@@ -4,7 +4,7 @@
 #include <string>
 using namespace std;
 
-namespace MathLibrary {
+namespace MyMathLibrary {
 
     float GetFractionPart(float Number)
     {

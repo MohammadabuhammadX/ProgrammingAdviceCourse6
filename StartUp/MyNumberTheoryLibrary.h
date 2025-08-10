@@ -4,7 +4,7 @@
 #include <string>
 using namespace std;
 
-namespace NumberTheoryLibrary {
+namespace MyNumberTheoryLibrary {
 
     bool IsPrime(int number) {
         if (number <= 1) return false;
