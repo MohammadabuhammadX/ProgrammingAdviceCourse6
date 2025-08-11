@@ -1,6 +1,13 @@
+﻿#pragma warning(disable : 4996)
 #include <iostream>
 #include <cmath>
 #include <vector>
+#include<cctype>
+#include<string>
+
+#include<ctime>
+
+#include<fstream>
 #include <iomanip>
 #include "MyMathLibrary.h";
 #include "MyNumberTheoryLibrary.h";
@@ -10,252 +17,27 @@
 #include "MyStringLibrary.h";
 #include "MyPatternLibrary.h";
 #include "MyStatisticsLibrary.h";
-
 using namespace std;
 
-enum enPositionLevel {
-	Intern = 1,
-	Junior = 2,
-	MidLevel = 3,
-	Senior = 4,
-	Lead = 5,
-	Manager = 6,
-	Director = 7
-};
-enum enDepartment {
-	HR = 1,
-	IT = 2,
-	Finance = 3,
-	Marketing = 4
-};
-enum enPosition {
-	// IT
-	BackEndDeveloper = 1,
-	FrontEndDeveloper = 2,
-	FullStackDeveloper = 3,
-	SystemAdministrator = 4,
-	NetworkEngineer = 5,
-
-	// HR
-	HRManager = 6,
-	HROfficer = 7,
-	RecruitmentSpecialist = 8,
-
-	// Finance
-	Accountant = 9,
-	FinancialAnalyst = 10,
-	PayrollSpecialist = 11,
-
-	// Marketing
-	MarketingManager = 12,
-	SEO_Specialist = 13,
-	ContentCreator = 14
-};
-
-struct stAddress {
-	string street;
-	string city;
-	string country;
-	string postalCode;
-};
-struct stDepartment {
-	enDepartment departmentId;
-	string departmentName;
-};
-struct stEmployee {
-	short int Id;
-	string firstName;
-	string lastName;
-	float salary;
-	enPositionLevel employeePositionLevel;
-	enPosition employeePosition;
-	stDepartment department;
-	stAddress address;
-};
-
-string HelperMethodPositionLevelToString(enPositionLevel level) {
-	switch (level) {
-	case Intern: return "Intern";
-	case Junior: return "Junior";
-	case MidLevel: return "Mid Level";
-	case Senior: return "Senior";
-	case Lead: return "Lead";
-	case Manager: return "Manager";
-	case Director: return "Director";
-	default: return "Unknown";
-	}
-}
-string HelperMethodPositionToString(enPosition pos) {
-	switch (pos) {
-	case BackEndDeveloper: return "Back End Developer";
-	case FrontEndDeveloper: return "Front End Developer";
-	case FullStackDeveloper: return "Full Stack Developer";
-	case SystemAdministrator: return "System Administrator";
-	case NetworkEngineer: return "Network Engineer";
-
-	case HRManager: return "HR Manager";
-	case HROfficer: return "HR Officer";
-	case RecruitmentSpecialist: return "Recruitment Specialist";
-
-	case Accountant: return "Accountant";
-	case FinancialAnalyst: return "Financial Analyst";
-	case PayrollSpecialist: return "Payroll Specialist";
-
-	case MarketingManager: return "Marketing Manager";
-	case SEO_Specialist: return "SEO Specialist";
-	case ContentCreator: return "Content Creator";
-
-	default: return "Unknown";
-	}
-}
-string HelperMethodDepartmentToString(enDepartment dept) {
-	switch (dept) {
-	case HR: return "HR";
-	case IT: return "IT";
-	case Finance: return "Finance";
-	case Marketing: return "Marketing";
-	default: return "Unknown";
-	}
-}
-
-void ShowPositionsByDepartment(enDepartment dept) {
-	cout << "\nSelect Position:\n";
-	switch (dept) {
-	case IT:
-		cout << "1 - Back End Developer\n";
-		cout << "2 - Front End Developer\n";
-		cout << "3 - Full Stack Developer\n";
-		cout << "4 - System Administrator\n";
-		cout << "5 - Network Engineer\n";
-		break;
-	case HR:
-		cout << "6 - HR Manager\n";
-		cout << "7 - HR Officer\n";
-		cout << "8 - Recruitment Specialist\n";
-		break;
-	case Finance:
-		cout << "9 - Accountant\n";
-		cout << "10 - Financial Analyst\n";
-		cout << "11 - Payroll Specialist\n";
-		break;
-	case Marketing:
-		cout << "12 - Marketing Manager\n";
-		cout << "13 - SEO Specialist\n";
-		cout << "14 - Content Creator\n";
-		break;
-	}
-}
-
-void ReadEmployeesData(vector<stEmployee>& employees) {
-
-	char MoreEmployee = 'y';
-	short idCounter = 1;
-	do
-	{
-		stEmployee emp;
-		emp.Id = idCounter++;
-
-		MyInputOutputLibrary::PrintMessage("\nEnter First Name");
-		cin >> emp.firstName;
-
-		MyInputOutputLibrary::PrintMessage("\nEnter Last Name");
-		cin >> emp.lastName;
-
-		MyInputOutputLibrary::PrintMessage("\nEnter Salary");
-		cin >> emp.salary;
-
-		int dept;
-		MyInputOutputLibrary::PrintMessage("Enter Department (1 = HR, 2 = IT, 3 = Finance, 4 = Marketing): ");
-		cin >> dept;
-		emp.department.departmentId = (enDepartment)dept;
-		emp.department.departmentName = HelperMethodDepartmentToString((enDepartment)dept);
-		
-		ShowPositionsByDepartment(emp.department.departmentId);
-		int position;
-		cin >> position;
-		emp.employeePosition = (enPosition)position;
-
-		MyInputOutputLibrary::PrintMessage("Enter Position Level (1 = Intern, 2 = Junior, 3 = MidLevel, 4 = Senior, 5 = Lead, 6 = Manager, 7 = Director): ");
-		short level;
-		cin >> level;
-		emp.employeePositionLevel = (enPositionLevel)level;
-
-		cout << "Enter Street: ";
-		cin.ignore();
-		getline(cin, emp.address.street);
-
-		cout << "Enter City: ";
-		getline(cin, emp.address.city);
-
-		cout << "Enter Country: ";
-		getline(cin, emp.address.country);
-
-		cout << "Enter Postal Code: ";
-		getline(cin, emp.address.postalCode);
-
-		employees.push_back(emp);
-
-
-		cout << "Do you want to add more employees Y/N";
-		cin >> MoreEmployee;
-		MoreEmployee = tolower(MoreEmployee);
-
-	} while (MoreEmployee == 'y');
-
-}
-
-void PrintAllEmployeesData(vector<stEmployee>& employees) {
-	cout << left;
-	cout << setw(3) << "ID" << " | "
-		<< setw(15) << "First Name" << " | "
-		<< setw(15) << "Last Name" << " | "
-		<< setw(10) << "Salary" << " | "
-		<< setw(15) << "Level" << " | "
-		<< setw(25) << "Position" << " | "
-		<< setw(12) << "Department" << " | "
-		<< setw(15) << "City" << " | "
-		<< setw(15) << "Country" << " | "
-		<< setw(10) << "Postal Code" << " |" << "\n";
-
-	cout << string(3, '=') << "=|="
-		<< string(15, '=') << "=|="
-		<< string(15, '=') << "=|="
-		<< string(10, '=') << "=|="
-		<< string(15, '=') << "=|="
-		<< string(25, '=') << "=|="
-		<< string(12, '=') << "=|="
-		<< string(15, '=') << "=|="
-		<< string(15, '=') << "=|="
-		<< string(10, '=') << "=|" << "\n";
-
-	for (stEmployee& employee : employees) {
-		cout << setw(3) << employee.Id << " | "
-			<< setw(15) << employee.firstName << " | "
-			<< setw(15) << employee.lastName << " | "
-			<< setw(10) << fixed << setprecision(2) << employee.salary << " | "
-			<< setw(15) << HelperMethodPositionLevelToString(employee.employeePositionLevel) << " | "
-			<< setw(25) << HelperMethodPositionToString(employee.employeePosition) << " | "
-			<< setw(12) << employee.department.departmentName << " | "
-			<< setw(15) << employee.address.city << " | "
-			<< setw(15) << employee.address.country << " | "
-			<< setw(10) << employee.address.postalCode << " |" << "\n";
-	}
-}
 
 
 int main()
 {
-	vector<stEmployee> employees;
+	time_t t = time(0);
 
-	ReadEmployeesData(employees);
+	char* dt = ctime(&t);
+	cout << "Local date and time is: " << dt << endl;
 
-	PrintAllEmployeesData(employees);
+	tm* gmtm = gmtime(&t);
+	dt = asctime(gmtm);
 
+	cout << "UTC date and time is: " << dt << endl;
 	return 0;
 }
 
-namespace HomeworksAndMyCode {
 
+
+namespace HomeworksAndMyCode {
 	class MyCode1 {
 		int main() {
 
@@ -696,7 +478,7 @@ namespace HomeworksAndMyCode {
 			return 0;
 		}
 	};
-	class MyCode18{
+	class MyCode18 {
 		enum enPositionLevel {
 			Junoir = 1,
 			Senior = 2
@@ -808,7 +590,7 @@ namespace HomeworksAndMyCode {
 			return 0;
 		}
 	};
-	class Homework6{
+	class Homework6 {
 		enum enPositionLevel {
 			Junoir = 1,
 			Senior = 2
@@ -924,6 +706,773 @@ namespace HomeworksAndMyCode {
 
 			PrintAllEmployeesData(employees);
 
+			return 0;
+		}
+	};
+	class homwwork6WithGPT {
+		enum enPositionLevel {
+			Intern = 1,
+			Junior = 2,
+			MidLevel = 3,
+			Senior = 4,
+			Lead = 5,
+			Manager = 6,
+			Director = 7
+		};
+		enum enDepartment {
+			HR = 1,
+			IT = 2,
+			Finance = 3,
+			Marketing = 4
+		};
+		enum enPosition {
+			// IT
+			BackEndDeveloper = 1,
+			FrontEndDeveloper = 2,
+			FullStackDeveloper = 3,
+			SystemAdministrator = 4,
+			NetworkEngineer = 5,
+
+			// HR
+			HRManager = 6,
+			HROfficer = 7,
+			RecruitmentSpecialist = 8,
+
+			// Finance
+			Accountant = 9,
+			FinancialAnalyst = 10,
+			PayrollSpecialist = 11,
+
+			// Marketing
+			MarketingManager = 12,
+			SEO_Specialist = 13,
+			ContentCreator = 14
+		};
+
+		struct stAddress {
+			string street;
+			string city;
+			string country;
+			string postalCode;
+		};
+		struct stDepartment {
+			enDepartment departmentId;
+			string departmentName;
+		};
+		struct stEmployee {
+			short int Id;
+			string firstName;
+			string lastName;
+			float salary;
+			enPositionLevel employeePositionLevel;
+			enPosition employeePosition;
+			stDepartment department;
+			stAddress address;
+		};
+
+		string HelperMethodPositionLevelToString(enPositionLevel level) {
+			switch (level) {
+			case Intern: return "Intern";
+			case Junior: return "Junior";
+			case MidLevel: return "Mid Level";
+			case Senior: return "Senior";
+			case Lead: return "Lead";
+			case Manager: return "Manager";
+			case Director: return "Director";
+			default: return "Unknown";
+			}
+		}
+		string HelperMethodPositionToString(enPosition pos) {
+			switch (pos) {
+			case BackEndDeveloper: return "Back End Developer";
+			case FrontEndDeveloper: return "Front End Developer";
+			case FullStackDeveloper: return "Full Stack Developer";
+			case SystemAdministrator: return "System Administrator";
+			case NetworkEngineer: return "Network Engineer";
+
+			case HRManager: return "HR Manager";
+			case HROfficer: return "HR Officer";
+			case RecruitmentSpecialist: return "Recruitment Specialist";
+
+			case Accountant: return "Accountant";
+			case FinancialAnalyst: return "Financial Analyst";
+			case PayrollSpecialist: return "Payroll Specialist";
+
+			case MarketingManager: return "Marketing Manager";
+			case SEO_Specialist: return "SEO Specialist";
+			case ContentCreator: return "Content Creator";
+
+			default: return "Unknown";
+			}
+		}
+		string HelperMethodDepartmentToString(enDepartment dept) {
+			switch (dept) {
+			case HR: return "HR";
+			case IT: return "IT";
+			case Finance: return "Finance";
+			case Marketing: return "Marketing";
+			default: return "Unknown";
+			}
+		}
+
+		void ShowPositionsByDepartment(enDepartment dept) {
+			cout << "\nSelect Position:\n";
+			switch (dept) {
+			case IT:
+				cout << "1 - Back End Developer\n";
+				cout << "2 - Front End Developer\n";
+				cout << "3 - Full Stack Developer\n";
+				cout << "4 - System Administrator\n";
+				cout << "5 - Network Engineer\n";
+				break;
+			case HR:
+				cout << "6 - HR Manager\n";
+				cout << "7 - HR Officer\n";
+				cout << "8 - Recruitment Specialist\n";
+				break;
+			case Finance:
+				cout << "9 - Accountant\n";
+				cout << "10 - Financial Analyst\n";
+				cout << "11 - Payroll Specialist\n";
+				break;
+			case Marketing:
+				cout << "12 - Marketing Manager\n";
+				cout << "13 - SEO Specialist\n";
+				cout << "14 - Content Creator\n";
+				break;
+			}
+		}
+
+		void ReadEmployeesData(vector<stEmployee>& employees) {
+
+			char MoreEmployee = 'y';
+			short idCounter = 1;
+			do
+			{
+				stEmployee emp;
+				emp.Id = idCounter++;
+
+				MyInputOutputLibrary::PrintMessage("\nEnter First Name");
+				cin >> emp.firstName;
+
+				MyInputOutputLibrary::PrintMessage("\nEnter Last Name");
+				cin >> emp.lastName;
+
+				MyInputOutputLibrary::PrintMessage("\nEnter Salary");
+				cin >> emp.salary;
+
+				int dept;
+				MyInputOutputLibrary::PrintMessage("Enter Department (1 = HR, 2 = IT, 3 = Finance, 4 = Marketing): ");
+				cin >> dept;
+				emp.department.departmentId = (enDepartment)dept;
+				emp.department.departmentName = HelperMethodDepartmentToString((enDepartment)dept);
+
+				ShowPositionsByDepartment(emp.department.departmentId);
+				int position;
+				cin >> position;
+				emp.employeePosition = (enPosition)position;
+
+				MyInputOutputLibrary::PrintMessage("Enter Position Level (1 = Intern, 2 = Junior, 3 = MidLevel, 4 = Senior, 5 = Lead, 6 = Manager, 7 = Director): ");
+				short level;
+				cin >> level;
+				emp.employeePositionLevel = (enPositionLevel)level;
+
+				cout << "Enter Street: ";
+				cin.ignore();
+				getline(cin, emp.address.street);
+
+				cout << "Enter City: ";
+				getline(cin, emp.address.city);
+
+				cout << "Enter Country: ";
+				getline(cin, emp.address.country);
+
+				cout << "Enter Postal Code: ";
+				getline(cin, emp.address.postalCode);
+
+				employees.push_back(emp);
+
+
+				cout << "Do you want to add more employees Y/N";
+				cin >> MoreEmployee;
+				MoreEmployee = tolower(MoreEmployee);
+
+			} while (MoreEmployee == 'y');
+
+		}
+
+		void PrintAllEmployeesData(vector<stEmployee>& employees) {
+			cout << left;
+			cout << setw(3) << "ID" << " | "
+				<< setw(15) << "First Name" << " | "
+				<< setw(15) << "Last Name" << " | "
+				<< setw(10) << "Salary" << " | "
+				<< setw(15) << "Level" << " | "
+				<< setw(25) << "Position" << " | "
+				<< setw(12) << "Department" << " | "
+				<< setw(15) << "City" << " | "
+				<< setw(15) << "Country" << " | "
+				<< setw(10) << "Postal Code" << " |" << "\n";
+
+			cout << string(3, '=') << "=|="
+				<< string(15, '=') << "=|="
+				<< string(15, '=') << "=|="
+				<< string(10, '=') << "=|="
+				<< string(15, '=') << "=|="
+				<< string(25, '=') << "=|="
+				<< string(12, '=') << "=|="
+				<< string(15, '=') << "=|="
+				<< string(15, '=') << "=|="
+				<< string(10, '=') << "=|" << "\n";
+
+			for (stEmployee& employee : employees) {
+				cout << setw(3) << employee.Id << " | "
+					<< setw(15) << employee.firstName << " | "
+					<< setw(15) << employee.lastName << " | "
+					<< setw(10) << fixed << setprecision(2) << employee.salary << " | "
+					<< setw(15) << HelperMethodPositionLevelToString(employee.employeePositionLevel) << " | "
+					<< setw(25) << HelperMethodPositionToString(employee.employeePosition) << " | "
+					<< setw(12) << employee.department.departmentName << " | "
+					<< setw(15) << employee.address.city << " | "
+					<< setw(15) << employee.address.country << " | "
+					<< setw(10) << employee.address.postalCode << " |" << "\n";
+			}
+		}
+
+
+		int main()
+		{
+			vector<stEmployee> employees;
+
+			ReadEmployeesData(employees);
+
+			PrintAllEmployeesData(employees);
+
+			return 0;
+		}
+	};
+	class MyCode19 {
+		int main()
+		{
+			vector<int> vNumbers;
+
+			vNumbers.push_back(10);
+			vNumbers.push_back(20);
+			vNumbers.push_back(30);
+			vNumbers.push_back(40);
+			vNumbers.push_back(50);
+
+			vNumbers.clear();
+			/*cout << "\nStack Size = " << vNumbers.size() << endl;
+
+			vNumbers.pop_back();
+			vNumbers.pop_back();
+			vNumbers.pop_back();
+			vNumbers.pop_back();
+
+			cout << "\nStack Size = " << vNumbers.size() << endl;*/
+			/*if (!vNumbers.empty())
+			{
+				vNumbers.pop_back();
+			}*/
+			/*if (vNumbers.size() > 0) {
+				vNumbers.pop_back();
+			}*/
+
+			cout << "\nNumber Vector: \n\n";
+			for (auto& Number : vNumbers)
+			{
+				cout << Number << " ";
+			}
+			cout << endl;
+
+			return 0;
+		}
+	};
+	class MyCode20 {
+		int main() {
+			vector<int> v;
+
+			// ======= Capacity & Size =======
+			v.push_back(10);
+			v.push_back(20);
+			v.push_back(30);
+			cout << "Size: " << v.size() << "\n";          // number of elements
+			cout << "Capacity: " << v.capacity() << "\n";  // allocated storage
+			cout << "Max size: " << v.max_size() << "\n";  // theoretical max elements
+			cout << "Is empty? " << v.empty() << "\n";     // check if empty
+
+			v.reserve(10); // Pre-allocate capacity
+			cout << "Capacity after reserve(10): " << v.capacity() << "\n";
+
+			v.shrink_to_fit(); // Reduce capacity to size
+			cout << "Capacity after shrink_to_fit(): " << v.capacity() << "\n\n";
+
+
+			// ======= Element Access =======
+			cout << "Element at index 0: " << v[0] << "\n";    // no bounds check
+			cout << "Element at index 1 (safe): " << v.at(1) << "\n"; // with bounds check
+			cout << "Front element: " << v.front() << "\n";    // first element
+			cout << "Back element: " << v.back() << "\n";      // last element
+			cout << "Pointer to data: " << v.data() << " (address)\n\n"; // pointer to first element
+
+
+			// ======= Modifiers =======
+			v.push_back(40); // Add at end
+			v.push_back(50);
+
+			v.pop_back(); // Remove last element
+
+			v.insert(v.begin() + 1, 15); // Insert at index 1
+			v.insert(v.end(), { 60, 70 }); // Insert at end multiple elements
+
+			v.erase(v.begin() + 2); // Erase element at index 2
+			v.erase(v.begin(), v.begin() + 1); // Erase first element
+
+			v.resize(8, 99); // Resize to 8 elements, fill new with 99
+
+			v.assign(3, 5); // Replace contents with 3 copies of value 5
+
+			vector<int> other = { 100, 200, 300 };
+			v.swap(other); // Swap contents with other vector
+
+			v.clear(); // Remove all elements
+			cout << "Size after clear(): " << v.size() << "\n\n";
+
+
+			// ======= Iterators =======
+			vector<string> names = { "Alice", "Bob", "Charlie" };
+
+			cout << "Forward iteration:\n";
+			for (auto it = names.begin(); it != names.end(); ++it) {
+				cout << *it << " ";
+			}
+			cout << "\n";
+
+			cout << "Reverse iteration:\n";
+			for (auto rit = names.rbegin(); rit != names.rend(); ++rit) {
+				cout << *rit << " ";
+			}
+			cout << "\n";
+
+			cout << "Const iteration:\n";
+			for (auto cit = names.cbegin(); cit != names.cend(); ++cit) {
+				cout << *cit << " ";
+			}
+			cout << "\n";
+
+			return 0;
+		}
+	};
+	class MyCode21 {
+		void FuncationByVal(int x) {
+			x++;
+		}
+		void FuncationByRef(int& x) {
+			x++;
+		}
+		int main() {
+
+			int a = 10;
+
+			FuncationByVal(a);
+			cout << "\n\n" << a << endl;
+			cout << "\n a  After calling funtionByVal: " << a << endl;
+			cout << "\n\n" << &a << endl;
+			FuncationByRef(a);
+			cout << "\n a  After calling funtionByRef: " << a << endl;
+			return 0;
+		}
+	};
+	class MyCode22 {
+		int main() {
+
+			int a = 10;
+			int& x = a;
+
+			cout << "\n" << &a << endl;
+			cout << "\n" << &x << endl;
+
+			x = 20;
+
+			cout << "\n" << a << endl;
+			cout << "\n" << x << endl;
+			return 0;
+		}
+
+	};
+	class MyCode23 {
+		int main() {
+
+			vector<int> nums{ 1,2,3,4,5 };
+
+			cout << "\n\nusing .at(i)\n";
+			cout << "Element at Index 0 : " << nums.at(0) << endl;
+			cout << "Element at Index 2 : " << nums.at(2) << endl;
+			cout << "Element at Index 4 : " << nums.at(5) << endl;
+
+			cout << "\n\nusing [i]\n";
+			cout << "Element at Index 0 : " << nums[0] << endl;
+			cout << "Element at Index 2 : " << nums[2] << endl;
+			cout << "Element at Index 4 : " << nums[5] << endl;
+
+			return 0;
+		}
+	};
+	class MyCode24 {
+		int main() {
+
+			vector<int> nums{ 1,2,3,4,5 };
+
+			cout << "Initial Vector: ";
+
+			for (const auto& num : nums) //const makes the num locked , so i cant modify it .
+			{
+				cout << num << " ";
+			}
+
+			cout << "\n\nUpdated Vector: ";
+
+			for (auto& num : nums)
+			{
+				num = 20;
+				cout << num << " ";
+			}
+
+			nums[1] = 40;
+			nums.at(2) = 80;
+			nums.at(4) = 90;
+
+			cout << "\n\nUpdated Vector: ";
+
+			for (const auto& num : nums)
+			{
+				cout << num << " ";
+			}
+
+			return 0;
+		}
+	};
+	class Mycode25 {
+		int main() {
+
+			vector<int> nums{ 1,2,3,4,5 };
+
+			try
+			{
+				cout << nums.at(5);
+			}
+			catch (...)
+			{
+				cout << "Out of bound\n";
+			}
+
+			return 0;
+		}
+	};
+	class MyCode26 {
+		int main()
+		{
+			string S1 = "My Name is Mohammed Abu-Hadhoud, I Love Programming.";
+
+			// Prints the length of the string
+			cout << S1.length() << endl;
+
+			// Returns the letter at position 3
+			cout << S1.at(3) << endl;
+
+			// Adds @ProgrammingAdvices to the end of string
+			S1.append(" @ProgrammingAdvices");
+			cout << S1 << endl;
+
+			// Inserts Ali at position 7
+			S1.insert(7, " Ali ");
+			cout << S1 << endl;
+
+			// Prints all the next 8 letters from position 16
+			cout << S1.substr(16, 8) << endl;
+
+			// Adds one character to the end of the string
+			S1.push_back('X');
+			cout << S1 << endl;
+
+			// Removes one character from the end of the string
+			S1.pop_back();
+			cout << S1 << endl;
+
+			// Finds Ali in the string
+			cout << S1.find("Ali") << endl;
+
+			// Finds ali in the string
+			cout << S1.find("ali") << endl;
+
+			if (S1.find("ali") == S1.npos)
+			{
+				cout << "ali is not found" << endl;
+			}
+
+			// Clears all string letters
+			S1.clear();
+			cout << S1 << endl;
+
+			return 0;
+		}
+	};
+	class MyCode27 {
+		void PrintFileContent(string FileName) {
+
+			fstream MyFile;
+
+			MyFile.open(FileName, ios::in);
+
+			if (MyFile.is_open()) {
+				string Line;
+
+				while (getline(MyFile, Line)) {
+
+					cout << Line << endl;
+				}
+				MyFile.close();
+			}
+
+		}
+
+
+
+		int main()
+		{
+
+			PrintFileContent("MyFile.txt");
+
+			return 0;
+		}
+	};
+	class MyCode28 {
+		void LoadDataFromFileToVector(string FileUrl, vector<string>& vFileContent) {
+
+			fstream MyFile;
+			MyFile.open(FileUrl, ios::in);
+
+			if (MyFile.is_open()) {
+
+				string Line;
+
+				while (getline(MyFile, Line)) {
+					vFileContent.push_back(Line);
+				}
+				MyFile.close();
+			}
+
+		}
+
+		int main()
+		{
+
+			vector<string> vFileContent;
+
+			LoadDataFromFileToVector("MyFile.txt", vFileContent);
+
+			for (auto& Line : vFileContent)
+			{
+				cout << Line << endl;
+			}
+
+			return 0;
+		}
+	};
+	class MyCode29 {
+		void SaveVectorToFile(string FileUrl, vector<string>vFileContent) {
+
+			fstream MyFile;
+			MyFile.open(FileUrl, ios::out);
+
+			if (MyFile.is_open()) {
+
+				for (auto& Line : vFileContent)
+				{
+					if (Line != "") {
+						MyFile << Line << endl;
+					}
+				}
+				MyFile.close();
+			}
+
+		}
+
+		int main()
+		{
+
+			vector<string> vFileContent{ "Mohammad","Ahmad","Ali","Abu-Hammad","Test" };
+
+			SaveVectorToFile("MyFile.txt", vFileContent);
+
+			return 0;
+		}
+	};
+	class MyCode30 {
+		void LoadDataFromFileToVector(string FileUrl, vector<string>& vFileContent) {
+
+			fstream MyFile;
+			MyFile.open(FileUrl, ios::in);
+
+			if (MyFile.is_open()) {
+
+				string Line;
+
+				while (getline(MyFile, Line)) {
+					vFileContent.push_back(Line);
+				}
+				MyFile.close();
+			}
+
+		}
+
+		void SaveVectorToFile(string FileUrl, vector<string>vFileContent) {
+
+			fstream MyFile;
+			MyFile.open(FileUrl, ios::out);
+
+			if (MyFile.is_open()) {
+
+				for (auto& Line : vFileContent)
+				{
+					if (Line != "") {
+						MyFile << Line << endl;
+					}
+				}
+				MyFile.close();
+			}
+
+		}
+
+		void PrintFileContent(string FileName) {
+
+			fstream MyFile;
+
+			MyFile.open(FileName, ios::in);
+
+			if (MyFile.is_open()) {
+				string Line;
+
+				while (getline(MyFile, Line)) {
+
+					cout << Line << endl;
+				}
+				MyFile.close();
+			}
+
+		}
+
+		void DeleteRecordFromFile(string Filename, string Record) {
+
+			vector<string>vFileContent;
+			LoadDataFromFileToVector(Filename, vFileContent);
+
+			for (auto& Line : vFileContent)
+			{
+				if (Line == Record) {
+					Line = "";
+				}
+			}
+			SaveVectorToFile(Filename, vFileContent);
+
+		}
+
+		int main()
+		{
+			string FileName = "MyFile.txt";
+			string DeletedName = "Test";
+			cout << "File Content Before Delete\n";
+			PrintFileContent(FileName);
+
+			DeleteRecordFromFile(FileName, DeletedName);//It will not hard deleted, Only deleted from the vector. so the orginal txt file remind the same.
+
+			cout << "\n\nFile Content Before Delete\n";
+			PrintFileContent(FileName);
+			return 0;
+		}
+	};
+	class MyCode31{
+		void LoadDataFromFileToVector(string FileUrl, vector<string>& vFileContent) {
+
+			fstream MyFile;
+			MyFile.open(FileUrl, ios::in);
+
+			if (MyFile.is_open()) {
+
+				string Line;
+
+				while (getline(MyFile, Line)) {
+					vFileContent.push_back(Line);
+				}
+				MyFile.close();
+			}
+
+		}
+
+		void SaveVectorToFile(string FileUrl, vector<string>vFileContent) {
+
+			fstream MyFile;
+			MyFile.open(FileUrl, ios::out);
+
+			if (MyFile.is_open()) {
+
+				for (auto& Line : vFileContent)
+				{
+					if (Line != "") {
+						MyFile << Line << endl;
+					}
+				}
+				MyFile.close();
+			}
+
+		}
+
+		void PrintFileContent(string FileName) {
+
+			fstream MyFile;
+
+			MyFile.open(FileName, ios::in);
+
+			if (MyFile.is_open()) {
+				string Line;
+
+				while (getline(MyFile, Line)) {
+
+					cout << Line << endl;
+				}
+				MyFile.close();
+			}
+
+		}
+
+		void UpdateRecordInFile(string FileName, string Record, string UpdateTo) {
+
+			vector<string>vFileContent;
+			LoadDataFromFileToVector(FileName, vFileContent);
+			for (auto& Line : vFileContent)
+			{
+				if (Line == Record) {
+					Line = UpdateTo;
+				}
+			}
+			SaveVectorToFile(FileName, vFileContent);
+		}
+
+
+		int main()
+		{
+			string FileName = "MyFile.txt";
+			string Record = "Ali";
+			string UpdatedTo = "Omer";
+
+			cout << "File Content Before Update\n";
+			PrintFileContent(FileName);
+
+			UpdateRecordInFile(FileName, Record, UpdatedTo);
+
+			cout << "\n\nFile Content After Update\n";
+			PrintFileContent(FileName);
 			return 0;
 		}
 	};
